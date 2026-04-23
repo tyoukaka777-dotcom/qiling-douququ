@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张起灵 · 异常交战推演系统</title>
+    <style>
+        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Courier New', Courier, monospace; padding: 15px; margin: 0; }
+        .container { max-width: 600px; margin: 20px auto; border: 1px solid #00ff41; padding: 20px; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
+        h1 { font-size: 1.2rem; text-align: center; border-bottom: 2px solid #00ff41; padding-bottom: 10px; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; }
+        input { background: #000; color: #00ff41; border: 1px solid #00ff41; padding: 8px; width: 100%; box-sizing: border-box; outline: none; }
+        button { background: #00ff41; color: #000; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        button:hover { background: #fff; }
+        #result { margin-top: 25px; line-height: 1.6; border-top: 1px dashed #00ff41; padding-top: 15px; font-size: 0.95rem; }
+        .sys-msg { color: #88cc88; font-style: italic; font-size: 0.8rem; }
+        .error { color: #ff4444; padding: 10px; border: 1px solid #ff4444; margin-top: 10px; }
+        .footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.5; }
+        /* 设置按钮 */
+        #set-key-btn { background: none; color: #00ff41; border: 1px solid #00ff41; width: auto; font-size: 0.7rem; padding: 2px 5px; margin-bottom: 10px; float: right; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button id="set-key-btn" onclick="askForKey()">🔑 配置核心</button>
+    <h1>[ 跨维度异常事件推演终端 ]</h1>
+    
+    <div class="input-group">
+        <label>对手：</label>
+        <input type="text" id="opponent" value="东北金渐层">
+    </div>
+    
+    <div class="input-group">
+        <label>场地：</label>
+        <input type="text" id="location" value="长白山原始森林">
+    </div>
+    
+    <button onclick="startFight()">▶ 执行推演程序</button>
+
+    <div id="result">终端就绪，等待输入...</div>
+</div>
+
+<div class="footer">CONFIDENTIAL - BUREAU OF UNNATURAL PHENOMENA</div>
+
+<script>
+    // 检查是否有存储的 Key
+    let API_KEY = localStorage.getItem('gemini_api_key');
+
+    function askForKey() {
+        const key = prompt("请输入你的 Gemini API Key (仅保存在你本地浏览器):", API_KEY || "");
+        if (key) {
+            localStorage.setItem('gemini_api_key', key);
+            API_KEY = key;
+            alert("Key 配置成功！");
+        }
+    }
+
+    async function startFight() {
+        if (!API_KEY) {
+            alert("请先点击右上角【配置核心】输入你的 API Key。");
+            askForKey();
+            return;
+        }
+
+        const opponent = document.getElementById('opponent').value;
+        const location = document.getElementById('location').value;
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.innerHTML = "<span class='sys-msg'>[系统] 正在连接卫星，扫描模型库...</span>";
+
+        try {
+            // 第一步：探测模型
+            const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
+            const listResponse = await fetch(listUrl);
+            
+            if (!listResponse.ok) {
+                throw new Error("Key 可能无效或网络无法连接 Google。");
+            }
+
+            const listData = await listResponse.json();
+            const validModels = listData.models.filter(m => m.supportedGenerationMethods.includes("generateContent"));
+            const targetModelName = (validModels.find(m => m.name.includes("gemini-1.5-flash")) || validModels[0]).name;
+
+            resultDiv.innerHTML = `<span class='sys-msg'>[系统] 锁定模型: ${targetModelName}<br>生成档案中...</span>`;
+
+            // 第二步：正式推演
+            const systemPrompt = `你是一个机密异常事件调查局的档案记录员。请客观推演【张起灵】与【${opponent}】在场地【${location}】的战斗。
+            要求：1. 必须明确使用张起灵和${opponent}的具体名字。2. 伪纪实悬疑档案文风。3. 画面感强。4. 结局明确。5. 严禁游戏术语。`;
+
+            const generateUrl = `https://generativelanguage.googleapis.com/v1beta/${targetModelName}:generateContent?key=${API_KEY}`;
+
+            const response = await fetch(generateUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] })
+            });
+
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+            
+            resultDiv.innerHTML = `<b>【异常交战观察报告】</b><br><br>${text.replace(/\n/g, "<br>")}`;
+
+        } catch (error) {
+            resultDiv.innerHTML = `<div class='error'>🚨 接入失败：${error.message}</div>`;
+        }
+    }
+</script>
+
+</body>
+</html>
