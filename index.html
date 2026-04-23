@@ -24,7 +24,7 @@
 
 <div class="container">
     <button id="set-key-btn" onclick="askForKey()">🔑 配置核心</button>
-    <h1>[ 张起灵跨维度交战推演终端 ]</h1>
+    <h1>[ 张起灵跨维度对战推演终端 ]</h1>
     
     <div class="input-group">
         <label>对手：</label>
@@ -70,35 +70,32 @@
         resultDiv.innerHTML = "<span class='sys-msg'>[系统] 正在连接 DeepSeek 主脑，生成高保真推演档案中...</span>";
 
         try {
-            // DeepSeek 的系统身份设定
             const systemPrompt = "你是一个机密异常事件调查局的资深档案记录员。";
             
-            // 发给 DeepSeek 的具体指令
             const userPrompt = `请基于客观物理事实与角色能力设定，推演【张起灵】与【${opponent}】在场地【${location}】的战斗。
             要求：
             1. 必须是一份伪纪实悬疑档案风格的调查报告。
             2. 必须在报告中明确写出“张起灵”和“${opponent}”的具体名字，禁止通篇使用“该目标”、“异常生物”等代词。
             3. 详细描写双方动作、兵器（如黑金古刀）与特性的碰撞画面。
             4. 结局必须清晰（胜/败/撤退/无伤脱身），不可模棱两可。
-            5. 严禁出现HP、回合、暴击等任何游戏术语。`;
+            5. 严禁出现HP、回合、暴击等任何游戏术语，保持写实感。
+            6. 尽量减少使用 Markdown 符号（如星号）。`;
 
-            // DeepSeek 官方 API 接口
             const url = 'https://api.deepseek.com/chat/completions';
             
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // DeepSeek 的身份验证方式：Bearer Token
                     'Authorization': `Bearer ${API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: 'deepseek-chat', // 使用 DeepSeek V3 核心模型
+                    model: 'deepseek-chat', 
                     messages: [
                         { role: 'system', content: systemPrompt },
                         { role: 'user', content: userPrompt }
                     ],
-                    temperature: 0.7 // 控制一点想象力，不要太脱缰
+                    temperature: 0.7 
                 })
             });
 
@@ -108,14 +105,17 @@
             }
 
             const data = await response.json();
-            // 解析 DeepSeek 返回的数据格式
             const text = data.choices[0].message.content;
             
-            // 渲染到页面上
-            resultDiv.innerHTML = `<b>【异常交战观察报告】</b><br><br>${text.replace(/\n/g, "<br>")}`;
+            // 【核心修改点】将星号包裹的内容转换为高亮的纯白加粗文本，然后处理换行
+            const formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, "<span style='color: #fff; font-weight: bold;'>$1</span>")
+                .replace(/\n/g, "<br>");
+            
+            resultDiv.innerHTML = `<b>【异常交战观察报告】</b><br><br>${formattedText}`;
 
         } catch (error) {
-            resultDiv.innerHTML = `<div class='error'>🚨 DeepSeek 接入失败：${error.message}</div>`;
+            resultDiv.innerHTML = `<div class='error'>🚨 接入失败：${error.message}</div>`;
         }
     }
 </script>
