@@ -3,62 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>张起灵 · 异常交战推演系统 (DeepSeek 驱动)</title>
+    <title>张起灵 · 跨维度生死斗兽场</title>
     <style>
-        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Courier New', Courier, monospace; padding: 15px; margin: 0; }
-        .container { max-width: 600px; margin: 20px auto; border: 1px solid #00ff41; padding: 20px; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
-        h1 { font-size: 1.2rem; text-align: center; border-bottom: 2px solid #00ff41; padding-bottom: 10px; margin-bottom: 20px; }
+        body { background-color: #0d0000; color: #ff3333; font-family: 'Courier New', Courier, monospace; padding: 15px; margin: 0; }
+        .container { max-width: 600px; margin: 20px auto; border: 1px solid #ff3333; padding: 20px; box-shadow: 0 0 20px rgba(255, 51, 51, 0.3); background-color: #1a0000; }
+        h1 { font-size: 1.3rem; text-align: center; border-bottom: 2px solid #ff3333; padding-bottom: 10px; margin-bottom: 20px; text-shadow: 0 0 5px #ff0000; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.9rem; }
-        input { background: #000; color: #00ff41; border: 1px solid #00ff41; padding: 8px; width: 100%; box-sizing: border-box; outline: none; }
-        button { background: #00ff41; color: #000; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        button:hover { background: #fff; }
-        #result { margin-top: 25px; line-height: 1.6; border-top: 1px dashed #00ff41; padding-top: 15px; font-size: 0.95rem; }
-        .sys-msg { color: #88cc88; font-style: italic; font-size: 0.8rem; }
-        .error { color: #ff4444; padding: 10px; border: 1px solid #ff4444; margin-top: 10px; }
-        .footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.5; }
-        #set-key-btn { background: none; color: #00ff41; border: 1px solid #00ff41; width: auto; font-size: 0.7rem; padding: 2px 5px; margin-bottom: 10px; float: right; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #ffaaaa; }
+        input { background: #000; color: #ff3333; border: 1px solid #ff3333; padding: 8px; width: 100%; box-sizing: border-box; outline: none; }
+        input:focus { box-shadow: 0 0 8px rgba(255, 51, 51, 0.5); }
+        button { background: #ff3333; color: #000; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; font-size: 1rem; }
+        button:hover { background: #fff; color: #ff0000; box-shadow: 0 0 10px #ff3333; }
+        #result { margin-top: 25px; line-height: 1.6; border-top: 1px dashed #ff3333; padding-top: 15px; font-size: 0.95rem; color: #ffcccc; }
+        .sys-msg { color: #ff8888; font-style: italic; font-size: 0.8rem; }
+        .error { color: #ff4444; padding: 10px; border: 1px solid #ff4444; margin-top: 10px; background: #330000; }
+        .footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.5; color: #ff3333; }
+        #set-key-btn { background: none; color: #ff3333; border: 1px solid #ff3333; width: auto; font-size: 0.7rem; padding: 2px 5px; margin-bottom: 10px; float: right; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button id="set-key-btn" onclick="askForKey()">🔑 配置核心</button>
-    <h1>[ 张起灵跨维度对战推演终端 ]</h1>
+    <button id="set-key-btn" onclick="askForKey()">🔑 权限验证</button>
+    <h1>[ 张起灵跨维度生死斗兽场终端 ]</h1>
     
     <div class="input-group">
-        <label>对手：</label>
-        <input type="text" id="opponent" value="东北金渐层">
+        <label>投放猎物/对手：</label>
+        <input type="text" id="opponent" value="狂暴的异形女皇">
     </div>
     
     <div class="input-group">
-        <label>场地：</label>
-        <input type="text" id="location" value="长白山原始森林">
+        <label>封闭角斗环境：</label>
+        <input type="text" id="location" value="八角铁笼与布满尖刺的深坑">
     </div>
     
-    <button onclick="startFight()">▶ 执行推演程序</button>
+    <button onclick="startFight()">▶ 开启不死不休决斗</button>
 
-    <div id="result">终端就绪，等待输入...</div>
+    <div id="result">斗兽场闸门已关闭，等待投放斗士...</div>
 </div>
 
-<div class="footer">POWERED BY DEEPSEEK - CONFIDENTIAL BUREAU</div>
+<div class="footer">WELCOME TO THE ARENA - NO ESCAPE, ONLY DEATH</div>
 
 <script>
-    // 检查是否有存储的 DeepSeek Key
     let API_KEY = localStorage.getItem('deepseek_api_key');
 
     function askForKey() {
-        const key = prompt("请输入你的 DeepSeek API Key (仅保存在你本地浏览器):", API_KEY || "");
+        const key = prompt("请输入斗兽场核心秘钥 (DeepSeek API Key):", API_KEY || "");
         if (key) {
             localStorage.setItem('deepseek_api_key', key);
             API_KEY = key;
-            alert("DeepSeek Key 配置成功！");
+            alert("秘钥注入成功！");
         }
     }
 
     async function startFight() {
         if (!API_KEY) {
-            alert("请先点击右上角【配置核心】输入你的 DeepSeek API Key。");
+            alert("请先点击右上角【权限验证】输入你的 DeepSeek API Key。");
             askForKey();
             return;
         }
@@ -67,19 +67,22 @@
         const location = document.getElementById('location').value;
         const resultDiv = document.getElementById('result');
 
-        resultDiv.innerHTML = "<span class='sys-msg'>[系统] 正在连接 DeepSeek 主脑，生成高保真推演档案中...</span>";
+        // 提示语换成更硬核的风格
+        resultDiv.innerHTML = "<span class='sys-msg'>[系统] 斗兽场闸门已锁死，正在推演残酷的厮杀过程...</span>";
 
         try {
-            const systemPrompt = "你是一个机密异常事件调查局的资深档案记录员。";
+            // 【核心修改点 1】改变系统身份设定
+            const systemPrompt = "你是一个存在于深渊深处的跨维度斗兽场（The Arena）的专属记录官。你的任务是冷酷、血腥、客观地记录被强行传送至此的斗士之间‘不死不休’的生死决斗。";
             
-            const userPrompt = `请基于客观物理事实与角色能力设定，推演【张起灵】与【${opponent}】在场地【${location}】的战斗。
+            // 【核心修改点 2】改变具体的推演指令
+            const userPrompt = `请推演【张起灵】与【${opponent}】在封闭场地【${location}】内的生死决斗。
             要求：
-            1. 必须是一份伪纪实悬疑档案风格的调查报告。
-            2. 必须在报告中明确写出“张起灵”和“${opponent}”的具体名字，禁止通篇使用“该目标”、“异常生物”等代词。
-            3. 详细描写双方动作、兵器（如黑金古刀）与特性的碰撞画面。
-            4. 结局必须清晰（胜/败/撤退/无伤脱身），不可模棱两可。
-            5. 严禁出现HP、回合、暴击等任何游戏术语，保持写实感。
-            6. 尽量减少使用 Markdown 符号（如星号）。`;
+            1. 斗兽场法则：双方被绝对力量强制封闭在场地内，无法撤退，无法逃跑。这必须是一场不死不休的硬核厮杀，直到一方彻底死亡或失去生命体征。
+            2. 明确名字：必须在记录中明确写出“张起灵”和“${opponent}”的具体名字。
+            3. 战斗过程：详细描写双方在绝境下的杀招碰撞。张起灵的黑金古刀如何切割、发力，麒麟血如何发挥作用。场面要惨烈、拳拳到肉、充满绝望感与破坏力。
+            4. 宣判结局：结尾必须有一方惨死或被彻底摧毁。明确宣判谁是活下来的最终胜利者，并描写战败者的死状与现场的惨烈。绝对不可平局！
+            5. 严禁出现HP、回合、暴击等任何游戏术语，保持极度写实感。
+            6. 必须输出纯文本，尽量减少使用 Markdown 符号。`;
 
             const url = 'https://api.deepseek.com/chat/completions';
             
@@ -95,7 +98,7 @@
                         { role: 'system', content: systemPrompt },
                         { role: 'user', content: userPrompt }
                     ],
-                    temperature: 0.7 
+                    temperature: 0.8 // 稍微调高一点温度，让战斗画面的想象力更丰富、更惨烈
                 })
             });
 
@@ -107,15 +110,15 @@
             const data = await response.json();
             const text = data.choices[0].message.content;
             
-            // 【核心修改点】将星号包裹的内容转换为高亮的纯白加粗文本，然后处理换行
+            // 将星号转换为斗兽场风格的纯白色高亮文字
             const formattedText = text
-                .replace(/\*\*(.*?)\*\*/g, "<span style='color: #fff; font-weight: bold;'>$1</span>")
+                .replace(/\*\*(.*?)\*\*/g, "<span style='color: #ffffff; font-weight: bold; background-color: #330000; padding: 0 3px;'>$1</span>")
                 .replace(/\n/g, "<br>");
             
-            resultDiv.innerHTML = `<b>【异常交战观察报告】</b><br><br>${formattedText}`;
+            resultDiv.innerHTML = `<b>【生死决斗实况记录】</b><br><br>${formattedText}`;
 
         } catch (error) {
-            resultDiv.innerHTML = `<div class='error'>🚨 接入失败：${error.message}</div>`;
+            resultDiv.innerHTML = `<div class='error'>🚨 闸门故障：${error.message}</div>`;
         }
     }
 </script>
